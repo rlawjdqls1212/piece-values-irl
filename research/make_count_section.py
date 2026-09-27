@@ -27,10 +27,6 @@ def main():
         name+f" & {c['estimate'][j]:.2f} & [{c['ci95'][0][j]:.2f}, {c['ci95'][1][j]:.2f}]"+r'\\' for j,name in enumerate(['Pawn','Knight','Bishop','Rook','Queen']) if j])
     sensitivity=table('Refitted boundary sensitivity. These estimates have no bootstrap intervals; all thresholds were specified before the count extension was executed.','tab:countsensitivity','lrrrr','Subset & N & B & R & Q',[
         (r'$C\leq '+str(r['cutoff'])+'$' if r['group']=='sparse' else r'$C\geq '+str(r['cutoff'])+'$')+' & '+' & '.join(f'{v:.2f}' for v in r['estimates']['ratios'][1:])+r'\\' for r in s['sensitivity']])
-    grid=table('All validation grid results for independently fitted count models. The penalty is selected within each group.','tab:countgrid','lrr','Group & Ridge & Validation NLL',[
-        r['group'].title()+f" & {x['ridge']:g} & {x['validation']['game_nll']:.4f}"+r'\\' for r in g for x in r['grid']])
-    perf=table('Held-out likelihood by remaining-piece-count group. Global and joint baselines are the original frozen models, evaluated on the same subset.','tab:countperf','lrrr','Group & Global & Joint & Independent',[
-        r['group'].title()+' & '+' & '.join(f"{r['test'][x]['game_nll']:.4f}" for x in ['global','joint','independent'])+r'\\' for r in g])
     text=r'''\section{Independent IRL by Remaining-Piece Count}
 \subsection{Definition and fitting design}
 To examine positions with many and few pieces directly, let $C(s)$ be the number of occupied squares minus two. Both colors and all pawns are counted, while the kings are excluded. Thus the initial position has $C=30$. Sparse positions have $C\leq10$, dense positions have $C\geq22$, and the intermediate group contains $11\leq C\leq21$. These cutoffs were specified before executing this extension, after the earlier stage analysis had been observed. They were not chosen by searching for the largest contrast.
@@ -61,16 +57,14 @@ The training groups also differ in their candidate actions and pawn structure. T
 Table~\ref{tab:countsupport} reports states with at least one candidate difference in each material component. A state with no variation in a component provides no direct likelihood information for that coefficient through the material term. In the dense group, only 75 training positions distinguish queen-count alternatives, compared with 211 in the sparse group. Larger total sample size therefore does not automatically mean stronger information about every piece. These are opportunities to constrain a coefficient; they are not counts of selected captures or independent observations.
 '''+support+r'''
 \subsection{Penalty and boundary sensitivity}
-The selected penalty is $10^{-4}$ for sparse and intermediate groups but $10^{-3}$ for the dense group. Table~\ref{tab:countgrid} shows all validation results so that this difference is visible. The dense estimate is not obtained by imposing the penalty selected for a different population. Changing regularization can alter both numerator and denominator, and the selected value need not make a ratio most similar to a conventional chess table.
-'''+grid+r'''
+The selected penalty is $10^{-4}$ for sparse and intermediate groups but $10^{-3}$ for the dense group. The dense estimate is not obtained by imposing the penalty selected for a different population. Changing regularization can alter both numerator and denominator, and the selected value need not make a ratio most similar to a conventional chess table.
+
 We additionally refit sparse cutoffs of 8 and 12 and dense cutoffs of 20 and 24. These fits repeat within-subset validation selection and do not reuse a pooled coefficient without refitting. Table~\ref{tab:countsensitivity} reports every setting. The sparse knight ratio changes from approximately 0.40 at cutoff 8 to 0.83 at cutoff 12, showing that a single low sparse estimate is boundary-sensitive. The corresponding queen ratios are near 3.44 and 3.42. The dense alternatives also change the relative coefficients. These comparisons have no bootstrap intervals and cannot establish that every observed numerical difference is statistically meaningful.
 '''+sensitivity+r'''
-\subsection{Supporting behavior fit and interpretation}
-Table~\ref{tab:countperf} evaluates the original global and joint models and the new independent model on each matching held-out subset. The joint model has slightly lower loss than the independent fit in all three groups. We do not select the main value table using this test comparison: the table's purpose is to show what an independent count-specific fit estimates. Rather, the diagnostic shows that releasing all coefficients by group does not automatically yield a predictive advantage over continuous context sharing.
-'''+perf+r'''
+\subsection{Interpretation}
 The new analysis supports a limited conclusion. Under this feature set and these operational groups, relative minor-piece and rook coefficients differ between sparse and dense populations, while uncertainty and denominator changes complicate the queen comparison. It does not show that the same piece in the same strategic situation loses value when unrelated pieces are removed. A design aimed at that causal question would need matched or controlled position transformations, with legality and downstream tactical effects explicitly handled. Here the descriptive group comparison is the intended result.
 '''
     (ROOT/'paper_jcst/count_results.tex').write_text(text,encoding='utf-8')
-    print('Generated count-results section with nine measured tables.')
+    print('Generated count-results section with seven measured tables.')
 
 if __name__=='__main__':main()

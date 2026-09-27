@@ -141,6 +141,11 @@ ORCID: \href{https://orcid.org/0009-0000-4719-1228}{0009-0000-4719-1228}}
     body=re.sub(r'\\begin\{table\}\[htbp\].*?\\end\{table\}',table,body,flags=re.S)
     # Keep research content and all measured tables; declarations are completed separately by authors.
     body += (DEST/'mathematical_note.tex').read_text(encoding='utf-8')
+    # Report relative values and uncertainty; omit predictive-score results.
+    body=re.sub(r'\\section\{Supporting predictive checks\}.*?(?=\\section\{Reproducibility and numerical checks\})','',body,flags=re.S)
+    body=body.replace('We minimize a game-balanced negative log likelihood with ridge regularization:', 'We estimate the coefficients using the following game-balanced objective with ridge regularization:')
+    body=body.replace('by validation game-mean NLL without refitting on the test data.', 'by minimizing the unpenalized objective on validation games, without refitting on the test data.')
+    body=body.replace(' The handcrafted baseline uses $(1,3,3.2,5,9,0.6,0.5,15)$ with a positive inverse temperature fitted on training data. A uniform legal-move policy is included.', '')
     text=head+body+r'\FloatBarrier'+DECLARATIONS+r'\bibliography{references}'+BOX
     text=text.replace(r'\dimexpr\columnwidth-2\fboxsep-2\fboxrule\relax',r'\dimexpr\columnwidth-2\fboxsep-2\fboxrule-2pt\relax')
     (DEST/'main.tex').write_text(text,encoding='utf-8')

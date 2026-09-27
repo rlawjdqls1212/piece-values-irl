@@ -1,7 +1,8 @@
 {
-  "pages": 15,
-  "all_11_original_tables_unchanged": true,
-  "total_tables": 26,
+  "pages": 14,
+  "retained_original_tables_unchanged": true,
+  "removed_nll_tables": 5,
+  "total_tables": 21,
   "all_tables_referenced": true,
   "official_class_unchanged": true,
   "abstract_word_counts": [
@@ -12,5 +13,5 @@
   "overfull_boxes": 0,
   "undefined_references": 0,
   "source_zip_integrity": true,
-  "pdf_sha256": "33aae2e27fd7c98414b1f648598608fec0a5d6c580531e06055df64cf65a6852"
+  "pdf_sha256": "a5764b294fe5671dc887762b0b17bae400269fc2d1a3950ac09dd4fc821ff960"
 }

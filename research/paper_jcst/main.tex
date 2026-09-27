@@ -48,12 +48,12 @@ The two partitions intentionally overlap. Reporting that overlap is necessary to
 \subsection{Research questions and contribution}
 The investigation has four empirical questions. First, how do pawn-normalized coefficients differ across the three stage reference populations of a pooled contextual model? Second, how much do the estimates change when each stage or piece-count group is fitted independently? Third, which differences remain visible under the tested choices of regularization and group boundary? Fourth, how do the estimates respond to Stockfish strength settings 1500, 2000, and 2500 when the observed boards are held fixed? These questions require consistent definitions, actual fits, uncertainty estimates, and reporting of alternatives that do not necessarily agree; they do not require claiming a new IRL algorithm.
 
-The dataset contains 300 Stockfish 18 self-play games with fixed engine settings and controlled early exploration. After excluding forced decisions and exact repeated board states according to a fixed split precedence, 18,351 positions remain. Game-level train, validation, and test partitions keep later observations from a game out of another partition. Hyperparameters are selected on validation data. The test partition is used for supporting behavioral diagnostics, while the principal outcomes are the learned relative coefficients and their dependence on the modeling choices. This ordering keeps predictive accuracy from becoming a substitute for the intended interpretation task.
+The dataset contains 300 Stockfish 18 self-play games with fixed engine settings and controlled early exploration. After excluding forced decisions and exact repeated board states according to a fixed split precedence, 18,351 positions remain. Game-level train, validation, and test partitions keep later observations from a game out of another partition. Hyperparameters are selected on validation data. The principal outcomes are the learned relative coefficients and their dependence on the modeling choices. The original test partition is preserved and is not used for coefficient estimation or hyperparameter selection.
 
 Our contributions are an explicit horizon-one estimand for stage-specific relative material values; pooled and independently fitted estimates with game-bootstrap intervals; a new comparison across remaining-piece-count groups using paired game resampling; and an auditable account of support, normalization, and sensitivity. The additional group analyses reuse the original collection and were motivated after inspecting the original stage results. They are therefore exploratory extensions, not preregistered confirmatory tests or independent replications. Reporting this sequence is part of making the strength of the evidence clear.
 
 \subsection{Scope of the claims}
-Our conclusions apply to one engine version, search budget, state distribution, and feature representation. Stronger search, human demonstrations, or a reply-aware reward model may yield different coefficients. A small test-loss improvement cannot establish that the recovered numbers are intrinsic material prices, and a statistically separated ratio cannot establish a causal effect of game progression. We use the term relative value only with this model-conditional meaning. The remaining sections locate the study among chess evaluation, behavioral imitation, and IRL; define the estimator and data; present stage and piece-count results; and document their limits and reproduction.
+Our conclusions apply to one engine version, search budget, state distribution, and feature representation. Stronger search, human demonstrations, or a reply-aware reward model may yield different coefficients. A statistically separated ratio cannot establish a causal effect of game progression or an intrinsic material price. We use the term relative value only with this model-conditional meaning. The remaining sections locate the study among chess evaluation, behavioral imitation, and IRL; define the estimator and data; present stage and piece-count results; and document their limits and reproduction.
 
 \section{Related Work}
 \subsection{Learning chess evaluations from demonstrations}
@@ -112,12 +112,12 @@ At temperature one, the policy is
 \begin{equation}
 \pi_\theta(a\mid s)=\frac{\exp r_\theta(s,a)}{\sum_{a'\in A(s)}\exp r_\theta(s,a')}.
 \end{equation}
-We minimize a game-balanced negative log likelihood with ridge regularization:
+We estimate the coefficients using the following game-balanced objective with ridge regularization:
 \begin{equation}
 \mathcal L(\theta)=-\frac1G\sum_{g=1}^G\frac1{n_g}
 \sum_{i\in g}\log\pi_\theta(a_i\mid s_i)+\frac\lambda2\|\theta\|_2^2.
 \end{equation}
-For the fixed design matrix this is a convex problem; positive ridge makes the objective strictly convex. We use L-BFGS-B with an analytic gradient. Choose $\lambda\in\{10^{-4},10^{-3},10^{-2}\}$ by validation game-mean NLL without refitting on the test data. The handcrafted baseline uses $(1,3,3.2,5,9,0.6,0.5,15)$ with a positive inverse temperature fitted on training data. A uniform legal-move policy is included.
+For the fixed design matrix this is a convex problem; positive ridge makes the objective strictly convex. We use L-BFGS-B with an analytic gradient. Choose $\lambda\in\{10^{-4},10^{-3},10^{-2}\}$ by minimizing the unpenalized objective on validation games, without refitting on the test data.
 
 \subsection{What the coefficients can identify}
 For most non-capturing, non-promoting moves, material-count differences are zero. Material coefficients are therefore informed primarily by the alternatives involving captures and promotions. In our training data, 7,201 of 10,795 positions have variation in at least one material feature across legal moves. There are 91 delivered-mate candidate actions. The material features cannot directly encode the long-term value of saving or repositioning a piece. A low coefficient may reflect a missing tactical continuation rather than low strategic importance. Within-state additive reward terms are unidentifiable from softmax probabilities. Temperature is fixed for learned models, but this convention does not resolve other sources of reward ambiguity or feature misspecification. Pawn normalization is a presentation convention, not evidence for a unique universal price.
@@ -411,23 +411,7 @@ Dense & 2677 & 912 & 402 & 146 & 75\\
 \bottomrule\end{tabular}\end{table}
 
 \subsection{Penalty and boundary sensitivity}
-The selected penalty is $10^{-4}$ for sparse and intermediate groups but $10^{-3}$ for the dense group. Table~\ref{tab:countgrid} shows all validation results so that this difference is visible. The dense estimate is not obtained by imposing the penalty selected for a different population. Changing regularization can alter both numerator and denominator, and the selected value need not make a ratio most similar to a conventional chess table.
-\begin{table}[tbp]\centering
-\small
-\caption{All validation grid results for independently fitted count models. The penalty is selected within each group.}\label{tab:countgrid}
-\begin{tabular}{lrr}
-\toprule
-Group & Ridge & Validation NLL\\\midrule
-Sparse & 0.0001 & 2.3767\\
-Sparse & 0.001 & 2.3778\\
-Sparse & 0.01 & 2.4179\\
-Intermediate & 0.0001 & 2.9340\\
-Intermediate & 0.001 & 2.9366\\
-Intermediate & 0.01 & 2.9670\\
-Dense & 0.0001 & 3.2289\\
-Dense & 0.001 & 3.2267\\
-Dense & 0.01 & 3.2575\\
-\bottomrule\end{tabular}\end{table}
+The selected penalty is $10^{-4}$ for sparse and intermediate groups but $10^{-3}$ for the dense group. The dense estimate is not obtained by imposing the penalty selected for a different population. Changing regularization can alter both numerator and denominator, and the selected value need not make a ratio most similar to a conventional chess table.
 
 We additionally refit sparse cutoffs of 8 and 12 and dense cutoffs of 20 and 24. These fits repeat within-subset validation selection and do not reuse a pooled coefficient without refitting. Table~\ref{tab:countsensitivity} reports every setting. The sparse knight ratio changes from approximately 0.40 at cutoff 8 to 0.83 at cutoff 12, showing that a single low sparse estimate is boundary-sensitive. The corresponding queen ratios are near 3.44 and 3.42. The dense alternatives also change the relative coefficients. These comparisons have no bootstrap intervals and cannot establish that every observed numerical difference is statistically meaningful.
 \begin{table}[tbp]\centering
@@ -442,19 +426,7 @@ $C\geq 20$ & 1.82 & 2.94 & 3.50 & 4.25\\
 $C\geq 24$ & 1.81 & 3.37 & 3.71 & 3.96\\
 \bottomrule\end{tabular}\end{table}
 
-\subsection{Supporting behavior fit and interpretation}
-Table~\ref{tab:countperf} evaluates the original global and joint models and the new independent model on each matching held-out subset. The joint model has slightly lower loss than the independent fit in all three groups. We do not select the main value table using this test comparison: the table's purpose is to show what an independent count-specific fit estimates. Rather, the diagnostic shows that releasing all coefficients by group does not automatically yield a predictive advantage over continuous context sharing.
-\begin{table}[tbp]\centering
-\small
-\caption{Held-out likelihood by remaining-piece-count group. Global and joint baselines are the original frozen models, evaluated on the same subset.}\label{tab:countperf}
-\begin{tabular}{lrrr}
-\toprule
-Group & Global & Joint & Independent\\\midrule
-Sparse & 2.4503 & 2.4461 & 2.4478\\
-Intermediate & 2.9698 & 2.9676 & 2.9706\\
-Dense & 3.2350 & 3.2223 & 3.2278\\
-\bottomrule\end{tabular}\end{table}
-
+\subsection{Interpretation}
 The new analysis supports a limited conclusion. Under this feature set and these operational groups, relative minor-piece and rook coefficients differ between sparse and dense populations, while uncertainty and denominator changes complicate the queen comparison. It does not show that the same piece in the same strategic situation loses value when unrelated pieces are removed. A design aimed at that causal question would need matched or controlled position transformations, with legality and downstream tactical effects explicitly handled. Here the descriptive group comparison is the intended result.
 
 \section{Stockfish Strength-Setting Experiment}
@@ -466,7 +438,7 @@ Each setting is queried on exactly the same 18,351 retained positions, with one 
 We store every returned legal move and verify its alignment with the original FEN and game identifier. Weakened move selection can be stochastic, and the exposed engine interface does not provide a seed for reproducing that component. The archived choices are therefore the exact labels for refitting. Re-querying the same positions is a new label realization, not a promised bit-for-bit recreation. The initial proposed 1320 setting was excluded when the final experimental scope was narrowed; it is not included in any reported comparison.
 
 \subsection{Fitting and uncertainty}
-For each setting, global and joint contextual models are independently trained from its selected moves. Ridge is chosen from the same three-value grid using the matching validation labels. We then refit the selected joint model for 100 training-game bootstrap samples. The identical sequence of sampled games is used across settings, preserving pairing on the common state population. These intervals condition on the archived expert-label realization and the selected penalty. They do not measure variability from repeatedly sampling the engine's weakened move selector.
+For each setting, global and joint contextual models are independently trained from its selected moves. Ridge is chosen from the same three-value grid using the matching validation labels; all selected penalties are $10^{-4}$. We then refit the selected joint model for 100 training-game bootstrap samples. The identical sequence of sampled games is used across settings, preserving pairing on the common state population. These intervals condition on the archived expert-label realization and the selected penalty. They do not measure variability from repeatedly sampling the engine's weakened move selector.
 
 Table~\ref{tab:elovalues} summarizes the joint models at a single common context: the equal-game mean of all original training states. This keeps the reference population fixed across settings. Table~\ref{tab:eloraw} retains the raw material coefficients before dividing by the pawn term. As elsewhere, ratios are shown only when the fitted pawn term and every bootstrap denominator exceed 0.001. These checks prevent numerical division by a near-zero or sign-changing denominator, but do not establish a unique underlying reward.
 \begin{table*}[t]\centering
@@ -542,21 +514,6 @@ Setting A & Setting B & Agreement\\\midrule
 2000 & 2500 & 30.50\%\\
 \bottomrule\end{tabular}\end{table}
 
-Table~\ref{tab:elometrics} provides the validation-selected penalties and held-out losses. Comparisons between global and joint models at the same setting share a target dataset. Comparisons of loss across settings change the labels and are therefore not a clean ranking of model quality or engine strength. A more diffuse move-selection process may simply be harder for this feature set to predict. We retain the results to assess whether the fitted coefficient descriptions remain connected to held-out choices, without selecting a preferred setting using test performance.
-\begin{table}[tbp]\centering
-\small
-\caption{Validation-selected ridge and held-out game-mean likelihood for each strength model. The target move labels differ across settings.}\label{tab:elometrics}
-\begin{tabular}{rlrr}
-\toprule
-Setting & Model & Ridge & Test NLL\\\midrule
-1500 & Global & 0.0001 & 3.0297\\
-1500 & Joint & 0.0001 & 3.0242\\
-2000 & Global & 0.0001 & 3.0120\\
-2000 & Joint & 0.0001 & 3.0092\\
-2500 & Global & 0.0001 & 2.9867\\
-2500 & Joint & 0.0001 & 2.9813\\
-\bottomrule\end{tabular}\end{table}
-
 \subsection{What this extension adds}
 The experiment changes the demonstrated actions while preserving the observed board population, complementing the count analysis that changes the fitted state subset. Together, the two extensions distinguish two sources of variation in an estimated coefficient: which decisions the demonstrator makes on a given set of boards, and which boards the estimator is asked to summarize. Neither source is an intrinsic property of the piece alone. In particular, there is no requirement that increasing the nominal setting makes every ratio converge monotonically to a conventional hand-assigned value.
 
@@ -570,33 +527,6 @@ The results come from one engine version, one node budget, random early explorat
 The principal output is a transparent stage-specific value table together with comparisons that expose its dependence on estimation choices. Reporting pooled and independent fits, raw and normalized coefficients, and sensitivity to penalties and boundaries is more informative than presenting one numerical table as definitive. The data support further investigation with reply-aware features and independent collections, while the current results form a reproducible restricted baseline.
 
 \appendix
-\section{Supporting predictive checks}
-Behavioral prediction is not the main result, but it checks whether estimated rewards bear a measurable relationship to held-out move choices. Table~\ref{tab:performance} retains the original model comparison. The joint minus global game-mean NLL difference is -0.0057 nats, with a paired 95\% game-bootstrap interval [-0.0095, -0.0017]. The effect is small. Table~\ref{tab:stageperf} reports stage-level checks. A lower prediction loss does not establish that a coefficient is an intrinsic material value.
-\begin{table}[tbp]\centering
-\small
-\caption{Supporting held-out behavioral prediction, retained as a validity diagnostic rather than the main research outcome.}\label{tab:performance}
-\begin{tabular}{lrr}
-\toprule
-Model & Game-mean NLL & Top-1 (\%)\\\midrule
-Uniform & 3.1008 & 6.70\\
-Handcrafted & 2.9337 & 16.79\\
-Global & 2.9044 & 16.70\\
-Phase & 2.9010 & 16.90\\
-Openness & 2.8993 & 16.90\\
-Joint & 2.8987 & 16.96\\
-\bottomrule\end{tabular}\end{table}
-\begin{table*}[t]\centering
-\small
-\caption{Exploratory stage-level prediction diagnostics. Independent fits are evaluated only on their corresponding held-out stage. No model is selected using this table.}\label{tab:stageperf}
-\begin{tabular}{lrrrr}
-\toprule
-Stage & Test games & Global NLL & Joint NLL & Independent NLL\\\midrule
-Opening & 60 & 3.2233 & 3.2040 & 3.2225\\
-Middlegame & 60 & 3.0621 & 3.0568 & 3.0622\\
-Endgame & 53 & 2.4270 & 2.4257 & 2.4295\\
-\bottomrule\end{tabular}\end{table*}
-
-
 \section{Reproducibility and numerical checks}
 The original analytic-gradient check had maximum absolute error $3.75\times10^{-11}$, and a synthetic conditional-choice recovery test had coefficient RMSE 0.0386. Perspective, promotion, legal candidate enumeration, board restoration, and game weighting were tested. Collected histories were replayed to verify stored states and moves. The extension additionally verifies that stage-subset target rows equal the corresponding original chosen-action feature rows and that subset game weights sum to one.
 
