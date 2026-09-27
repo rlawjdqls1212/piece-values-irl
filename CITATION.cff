@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "Please cite the accompanying manuscript when using this research."
+title: "Stage-Specific Relative Chess Piece Values Estimated with One-Step Maximum-Entropy IRL"
+type: software
+authors:
+  - family-names: Kim
+    given-names: Jungbin
+    orcid: "https://orcid.org/0009-0000-4719-1228"
+repository-code: "https://github.com/rlawjdqls1212/piece-values-irl"

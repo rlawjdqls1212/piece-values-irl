@@ -1,0 +1,12 @@
+{
+  "levels": [
+    1500,
+    2000,
+    2500
+  ],
+  "legal_moves_and_state_alignment_verified": true,
+  "test_metrics_and_intervals_reproduced": true,
+  "hashes_verified": true,
+  "labels_per_setting": 18351,
+  "bootstrap_refits": 300
+}

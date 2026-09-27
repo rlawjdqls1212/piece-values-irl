@@ -1,0 +1,1451 @@
+{
+  "groups": [
+    {
+      "group": "sparse",
+      "weights": [
+        1.1373728811287862,
+        0.45916514419788307,
+        1.0886178973837652,
+        2.2541825570530913,
+        3.879695588267708,
+        0.3800367899301692,
+        0.9474999607392743,
+        6.251557768398868
+      ],
+      "ridge": 0.0001,
+      "grid": [
+        {
+          "ridge": 0.0001,
+          "weights": [
+            1.1373728811287862,
+            0.45916514419788307,
+            1.0886178973837652,
+            2.2541825570530913,
+            3.879695588267708,
+            0.3800367899301692,
+            0.9474999607392743,
+            6.251557768398868
+          ],
+          "validation": {
+            "game_nll": 2.3766677423912395,
+            "position_nll": 2.4636793869894147,
+            "game_top1": 0.22601877402864706,
+            "positions": 1319,
+            "games": 51
+          },
+          "optimization": {
+            "iterations": 20,
+            "objective": 2.403317787969307,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        },
+        {
+          "ridge": 0.001,
+          "weights": [
+            1.0169759398115077,
+            0.3563361819770183,
+            0.8749178080533161,
+            2.0061049673967344,
+            3.4724290626288448,
+            0.44039248875996534,
+            0.9679336095732691,
+            4.126365091852119
+          ],
+          "validation": {
+            "game_nll": 2.3778378395030266,
+            "position_nll": 2.463635998090352,
+            "game_top1": 0.21982271881298399,
+            "positions": 1319,
+            "games": 51
+          },
+          "optimization": {
+            "iterations": 21,
+            "objective": 2.42355972480408,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        },
+        {
+          "ridge": 0.01,
+          "weights": [
+            0.5510826715286199,
+            0.1056641957192263,
+            0.2545942109843626,
+            0.9530790818211564,
+            1.6660451748097407,
+            0.600961830673159,
+            0.9975447443627155,
+            1.645104097689723
+          ],
+          "validation": {
+            "game_nll": 2.4178835673322667,
+            "position_nll": 2.4896730608215174,
+            "game_top1": 0.21946385277802724,
+            "positions": 1319,
+            "games": 51
+          },
+          "optimization": {
+            "iterations": 13,
+            "objective": 2.4972771305833086,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        }
+      ],
+      "test": {
+        "independent": {
+          "game_nll": 2.447790049845904,
+          "position_nll": 2.5765958311532855,
+          "game_top1": 0.2044115426928339,
+          "positions": 1642,
+          "games": 53
+        },
+        "global": {
+          "game_nll": 2.4502969358747513,
+          "position_nll": 2.5795339722385884,
+          "game_top1": 0.20655778905611938,
+          "positions": 1642,
+          "games": 53
+        },
+        "joint": {
+          "game_nll": 2.446088385046168,
+          "position_nll": 2.573451622710875,
+          "game_top1": 0.20773703433913823,
+          "positions": 1642,
+          "games": 53
+        }
+      },
+      "coverage": {
+        "train": {
+          "positions": 4232,
+          "games": 147,
+          "piece_count_mean": 6.53948545083294,
+          "context_mean": [
+            0.2096157244107617,
+            0.9122748273069764
+          ],
+          "stage_positions": {
+            "opening": 0,
+            "middlegame": 795,
+            "endgame": 3437
+          },
+          "informative_positions": [
+            1199,
+            362,
+            325,
+            312,
+            211
+          ],
+          "expert_material_change_positions": 483,
+          "mean_legal_actions": 18.374955152110065
+        },
+        "validation": {
+          "positions": 1319,
+          "games": 51,
+          "piece_count_mean": 6.640161843712493,
+          "context_mean": [
+            0.22363366248601113,
+            0.9109956035967587
+          ],
+          "stage_positions": {
+            "opening": 0,
+            "middlegame": 248,
+            "endgame": 1071
+          },
+          "informative_positions": [
+            423,
+            141,
+            96,
+            90,
+            83
+          ],
+          "expert_material_change_positions": 167,
+          "mean_legal_actions": 18.982009449503476
+        },
+        "test": {
+          "positions": 1642,
+          "games": 53,
+          "piece_count_mean": 6.457505075155266,
+          "context_mean": [
+            0.2138260541788363,
+            0.9151372724728485
+          ],
+          "stage_positions": {
+            "opening": 0,
+            "middlegame": 418,
+            "endgame": 1224
+          },
+          "informative_positions": [
+            503,
+            121,
+            172,
+            132,
+            120
+          ],
+          "expert_material_change_positions": 192,
+          "mean_legal_actions": 18.475824681471632
+        }
+      },
+      "estimates": {
+        "raw": [
+          1.1373728811287862,
+          0.45916514419788307,
+          1.0886178973837652,
+          2.2541825570530913,
+          3.879695588267708
+        ],
+        "ratios": [
+          1.0,
+          0.403706780613746,
+          0.9571336853955634,
+          1.981920436520279,
+          3.4111025967291417
+        ],
+        "raw_ci95": [
+          [
+            0.9299420534232178,
+            -0.3440951304257368,
+            0.3323815517149691,
+            1.8123465904933962,
+            3.4433959798937948
+          ],
+          [
+            1.3901288045407365,
+            1.039587871336161,
+            1.5276118003543109,
+            2.643432478072349,
+            4.403444143689125
+          ]
+        ],
+        "bootstrap_positive_pawn_fraction": 1.0,
+        "normalization_stable": true,
+        "ratio_ci95": [
+          [
+            1.0,
+            -0.33311956124229225,
+            0.3397768872405261,
+            1.5993961700394417,
+            2.769415891221716
+          ],
+          [
+            1.0,
+            0.8060808016075889,
+            1.394979762184719,
+            2.3971282319968856,
+            4.38146811654234
+          ]
+        ]
+      }
+    },
+    {
+      "group": "intermediate",
+      "weights": [
+        0.9917313205289893,
+        1.4200307245729473,
+        1.9581576989747917,
+        2.7096384923807024,
+        3.5396368221656496,
+        0.6051953928288154,
+        0.5807172346170109,
+        4.569353483220905
+      ],
+      "ridge": 0.0001,
+      "grid": [
+        {
+          "ridge": 0.0001,
+          "weights": [
+            0.9917313205289893,
+            1.4200307245729473,
+            1.9581576989747917,
+            2.7096384923807024,
+            3.5396368221656496,
+            0.6051953928288154,
+            0.5807172346170109,
+            4.569353483220905
+          ],
+          "validation": {
+            "game_nll": 2.9340231442121465,
+            "position_nll": 2.990355859508652,
+            "game_top1": 0.19534908455750222,
+            "positions": 1219,
+            "games": 60
+          },
+          "optimization": {
+            "iterations": 22,
+            "objective": 2.9086383548129784,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        },
+        {
+          "ridge": 0.001,
+          "weights": [
+            0.9196649219877774,
+            1.3143048495785072,
+            1.8458849062589338,
+            2.5812473215261935,
+            3.2067647879867383,
+            0.6721810221303786,
+            0.6165281673495915,
+            1.6057435751301632
+          ],
+          "validation": {
+            "game_nll": 2.9365653822432676,
+            "position_nll": 2.991785793596988,
+            "game_top1": 0.19610284468626232,
+            "positions": 1219,
+            "games": 60
+          },
+          "optimization": {
+            "iterations": 20,
+            "objective": 2.9235028957150533,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        },
+        {
+          "ridge": 0.01,
+          "weights": [
+            0.5974699573619221,
+            0.7912884928153241,
+            1.2336213064792618,
+            1.7968877987469638,
+            1.585979474365441,
+            0.955646039732431,
+            0.6967718515567012,
+            0.18031192382543604
+          ],
+          "validation": {
+            "game_nll": 2.9669571223202325,
+            "position_nll": 3.0146193143870574,
+            "game_top1": 0.19457123367032034,
+            "positions": 1219,
+            "games": 60
+          },
+          "optimization": {
+            "iterations": 15,
+            "objective": 2.991551337641299,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        }
+      ],
+      "test": {
+        "independent": {
+          "game_nll": 2.9706343239009727,
+          "position_nll": 3.0031233547006195,
+          "game_top1": 0.1753181286729997,
+          "positions": 1217,
+          "games": 59
+        },
+        "global": {
+          "game_nll": 2.969782102779258,
+          "position_nll": 3.0008849192787532,
+          "game_top1": 0.1736232134187624,
+          "positions": 1217,
+          "games": 59
+        },
+        "joint": {
+          "game_nll": 2.967640274740613,
+          "position_nll": 2.9999133824548787,
+          "game_top1": 0.17656087360441547,
+          "positions": 1217,
+          "games": 59
+        }
+      },
+      "coverage": {
+        "train": {
+          "positions": 3354,
+          "games": 172,
+          "piece_count_mean": 15.83259866790424,
+          "context_mean": [
+            0.5073371859923291,
+            0.6555556942560583
+          ],
+          "stage_positions": {
+            "opening": 0,
+            "middlegame": 2808,
+            "endgame": 546
+          },
+          "informative_positions": [
+            2394,
+            784,
+            605,
+            459,
+            166
+          ],
+          "expert_material_change_positions": 900,
+          "mean_legal_actions": 29.370784023386914
+        },
+        "validation": {
+          "positions": 1219,
+          "games": 60,
+          "piece_count_mean": 15.752000493006717,
+          "context_mean": [
+            0.4931418174514797,
+            0.664674383332839
+          ],
+          "stage_positions": {
+            "opening": 0,
+            "middlegame": 993,
+            "endgame": 226
+          },
+          "informative_positions": [
+            899,
+            315,
+            217,
+            148,
+            50
+          ],
+          "expert_material_change_positions": 317,
+          "mean_legal_actions": 29.506517661928903
+        },
+        "test": {
+          "positions": 1217,
+          "games": 59,
+          "piece_count_mean": 15.637157071194403,
+          "context_mean": [
+            0.5128558722792277,
+            0.6708487928066724
+          ],
+          "stage_positions": {
+            "opening": 0,
+            "middlegame": 1021,
+            "endgame": 196
+          },
+          "informative_positions": [
+            828,
+            336,
+            242,
+            191,
+            86
+          ],
+          "expert_material_change_positions": 308,
+          "mean_legal_actions": 29.400680161950874
+        }
+      },
+      "estimates": {
+        "raw": [
+          0.9917313205289893,
+          1.4200307245729473,
+          1.9581576989747917,
+          2.7096384923807024,
+          3.5396368221656496
+        ],
+        "ratios": [
+          1.0,
+          1.4318704019708717,
+          1.9744840749108448,
+          2.732230430047709,
+          3.5691489709910624
+        ],
+        "raw_ci95": [
+          [
+            0.8345117842356703,
+            1.1292109277267315,
+            1.7288053595137811,
+            2.4827235359007997,
+            3.1720631152918095
+          ],
+          [
+            1.1300734971895883,
+            1.679534323525039,
+            2.1651801336880068,
+            3.0029872774774238,
+            3.905072591306553
+          ]
+        ],
+        "bootstrap_positive_pawn_fraction": 1.0,
+        "normalization_stable": true,
+        "ratio_ci95": [
+          [
+            1.0,
+            1.1843083993925039,
+            1.7693089357038114,
+            2.4046366536021972,
+            3.1589557326918873
+          ],
+          [
+            1.0,
+            1.7835316974307653,
+            2.4756619803748503,
+            3.279536962781173,
+            4.281372531067494
+          ]
+        ]
+      }
+    },
+    {
+      "group": "dense",
+      "weights": [
+        0.7462358332822766,
+        1.4086971137076136,
+        2.4521809582601737,
+        2.5325534640442076,
+        3.247440328487193,
+        0.9012400380658563,
+        -0.26597580414093963,
+        0.0
+      ],
+      "ridge": 0.001,
+      "grid": [
+        {
+          "ridge": 0.0001,
+          "weights": [
+            0.8052860914910341,
+            1.4999607858046242,
+            2.597361332011502,
+            2.889940248596947,
+            3.888049593462308,
+            0.8452637840269054,
+            -0.34045314950831274,
+            0.0
+          ],
+          "validation": {
+            "game_nll": 3.228935213251691,
+            "position_nll": 3.2805771781594992,
+            "game_top1": 0.16200056969639526,
+            "positions": 1086,
+            "games": 60
+          },
+          "optimization": {
+            "iterations": 16,
+            "objective": 3.22498260874952,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        },
+        {
+          "ridge": 0.001,
+          "weights": [
+            0.7462358332822766,
+            1.4086971137076136,
+            2.4521809582601737,
+            2.5325534640442076,
+            3.247440328487193,
+            0.9012400380658563,
+            -0.26597580414093963,
+            0.0
+          ],
+          "validation": {
+            "game_nll": 3.2266580486376495,
+            "position_nll": 3.2763203256398215,
+            "game_top1": 0.1604902067792986,
+            "positions": 1086,
+            "games": 60
+          },
+          "optimization": {
+            "iterations": 16,
+            "objective": 3.2384310306164465,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        },
+        {
+          "ridge": 0.01,
+          "weights": [
+            0.5120874068316977,
+            0.9590102567516775,
+            1.6313413915194408,
+            0.9160701140523845,
+            1.1032481284040077,
+            1.1001838013671636,
+            -0.038672140310011385,
+            0.0
+          ],
+          "validation": {
+            "game_nll": 3.2574587054181254,
+            "position_nll": 3.2992321431199776,
+            "game_top1": 0.15386947018023944,
+            "positions": 1086,
+            "games": 60
+          },
+          "optimization": {
+            "iterations": 11,
+            "objective": 3.296967244420834,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        }
+      ],
+      "test": {
+        "independent": {
+          "game_nll": 3.227753810562429,
+          "position_nll": 3.2650659436059115,
+          "game_top1": 0.14006458773479494,
+          "positions": 1073,
+          "games": 60
+        },
+        "global": {
+          "game_nll": 3.2349763127971842,
+          "position_nll": 3.2729690783747327,
+          "game_top1": 0.13325685264580986,
+          "positions": 1073,
+          "games": 60
+        },
+        "joint": {
+          "game_nll": 3.2223173261173357,
+          "position_nll": 3.259906473673995,
+          "game_top1": 0.14090133779029498,
+          "positions": 1073,
+          "games": 60
+        }
+      },
+      "coverage": {
+        "train": {
+          "positions": 3209,
+          "games": 179,
+          "piece_count_mean": 26.369610231367318,
+          "context_mean": [
+            0.9157492937140572,
+            0.2769950007925354
+          ],
+          "stage_positions": {
+            "opening": 1071,
+            "middlegame": 2138,
+            "endgame": 0
+          },
+          "informative_positions": [
+            2677,
+            912,
+            402,
+            146,
+            75
+          ],
+          "expert_material_change_positions": 784,
+          "mean_legal_actions": 34.551607939995755
+        },
+        "validation": {
+          "positions": 1086,
+          "games": 60,
+          "piece_count_mean": 26.297053740976335,
+          "context_mean": [
+            0.9245009526279228,
+            0.2906525814424284
+          ],
+          "stage_positions": {
+            "opening": 358,
+            "middlegame": 728,
+            "endgame": 0
+          },
+          "informative_positions": [
+            914,
+            317,
+            154,
+            39,
+            41
+          ],
+          "expert_material_change_positions": 275,
+          "mean_legal_actions": 34.96193003961875
+        },
+        "test": {
+          "positions": 1073,
+          "games": 60,
+          "piece_count_mean": 26.373485529682092,
+          "context_mean": [
+            0.9166693765079511,
+            0.2708612875039664
+          ],
+          "stage_positions": {
+            "opening": 357,
+            "middlegame": 716,
+            "endgame": 0
+          },
+          "informative_positions": [
+            898,
+            294,
+            100,
+            50,
+            26
+          ],
+          "expert_material_change_positions": 267,
+          "mean_legal_actions": 34.27653667261103
+        }
+      },
+      "estimates": {
+        "raw": [
+          0.7462358332822766,
+          1.4086971137076136,
+          2.4521809582601737,
+          2.5325534640442076,
+          3.247440328487193
+        ],
+        "ratios": [
+          1.0,
+          1.8877371614701723,
+          3.2860670164743935,
+          3.39377091140868,
+          4.3517614454448115
+        ],
+        "raw_ci95": [
+          [
+            0.5808009990761958,
+            1.1056173794995894,
+            2.149482038299617,
+            2.03159262522371,
+            2.7827719787170313
+          ],
+          [
+            0.8703401250367319,
+            1.6268444359925587,
+            2.687251274858223,
+            2.8728036227116394,
+            3.7085833956644794
+          ]
+        ],
+        "bootstrap_positive_pawn_fraction": 1.0,
+        "normalization_stable": true,
+        "ratio_ci95": [
+          [
+            1.0,
+            1.5236551122138122,
+            2.7827800065853014,
+            2.635885100635633,
+            3.463679778461266
+          ],
+          [
+            1.0,
+            2.479736886444525,
+            4.168710053215737,
+            4.41982805705837,
+            5.6105216755504195
+          ]
+        ]
+      }
+    }
+  ],
+  "sensitivity": [
+    {
+      "group": "sparse",
+      "cutoff": 8,
+      "ridge": 0.0001,
+      "grid": [
+        {
+          "ridge": 0.0001,
+          "weights": [
+            1.1495415225309722,
+            0.46524521462780577,
+            1.1383204804341631,
+            2.362881250162126,
+            3.9570691082347125,
+            0.4556448729227074,
+            0.7734332729941121,
+            6.68628331492166
+          ],
+          "validation": {
+            "game_nll": 2.368957742008856,
+            "position_nll": 2.399823728151234,
+            "game_top1": 0.24769240621385727,
+            "positions": 1063,
+            "games": 42
+          },
+          "optimization": {
+            "iterations": 20,
+            "objective": 2.3325486890587994,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        },
+        {
+          "ridge": 0.001,
+          "weights": [
+            1.000910225089887,
+            0.33351055906039423,
+            0.8673908661028799,
+            2.054835901947488,
+            3.513863421851263,
+            0.5158098313536907,
+            0.7997903709801437,
+            4.5451561328309085
+          ],
+          "validation": {
+            "game_nll": 2.3728084176045683,
+            "position_nll": 2.4001765303431792,
+            "game_top1": 0.2480277516196252,
+            "positions": 1063,
+            "games": 42
+          },
+          "optimization": {
+            "iterations": 18,
+            "objective": 2.3549718755955906,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        },
+        {
+          "ridge": 0.01,
+          "weights": [
+            0.46872636602595313,
+            0.048193819704650524,
+            0.20958432772528368,
+            0.9074851918728669,
+            1.651929563718394,
+            0.6387872832150371,
+            0.8519669827259021,
+            1.8405838912353722
+          ],
+          "validation": {
+            "game_nll": 2.439445336649548,
+            "position_nll": 2.4346445440151796,
+            "game_top1": 0.22833218227349833,
+            "positions": 1063,
+            "games": 42
+          },
+          "optimization": {
+            "iterations": 11,
+            "objective": 2.4344568808052744,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        }
+      ],
+      "estimates": {
+        "raw": [
+          1.1495415225309722,
+          0.46524521462780577,
+          1.1383204804341631,
+          2.362881250162126,
+          3.9570691082347125
+        ],
+        "ratios": [
+          1.0,
+          0.4047224093336486,
+          0.9902386804853265,
+          2.055498826140456,
+          3.4423020227423726
+        ]
+      },
+      "test": {
+        "game_nll": 2.367174861854743,
+        "position_nll": 2.529447675561675,
+        "game_top1": 0.23553965550741787,
+        "positions": 1339,
+        "games": 50
+      },
+      "coverage": {
+        "train": {
+          "positions": 3436,
+          "games": 129,
+          "piece_count_mean": 5.379718049854481,
+          "context_mean": [
+            0.18748210114520564,
+            0.9404389665366368
+          ],
+          "stage_positions": {
+            "opening": 0,
+            "middlegame": 450,
+            "endgame": 2986
+          },
+          "informative_positions": [
+            819,
+            293,
+            235,
+            247,
+            176
+          ],
+          "expert_material_change_positions": 347,
+          "mean_legal_actions": 17.24101848589946
+        },
+        "validation": {
+          "positions": 1063,
+          "games": 42,
+          "piece_count_mean": 5.283942067448978,
+          "context_mean": [
+            0.17849118815820694,
+            0.9382251155975179
+          ],
+          "stage_positions": {
+            "opening": 0,
+            "middlegame": 141,
+            "endgame": 922
+          },
+          "informative_positions": [
+            277,
+            91,
+            80,
+            76,
+            68
+          ],
+          "expert_material_change_positions": 122,
+          "mean_legal_actions": 19.069410229638343
+        },
+        "test": {
+          "positions": 1339,
+          "games": 50,
+          "piece_count_mean": 5.525601247769983,
+          "context_mean": [
+            0.19794609297635482,
+            0.944544251159333
+          ],
+          "stage_positions": {
+            "opening": 0,
+            "middlegame": 279,
+            "endgame": 1060
+          },
+          "informative_positions": [
+            340,
+            92,
+            136,
+            111,
+            102
+          ],
+          "expert_material_change_positions": 143,
+          "mean_legal_actions": 19.027291261276076
+        }
+      }
+    },
+    {
+      "group": "sparse",
+      "cutoff": 12,
+      "ridge": 0.0001,
+      "grid": [
+        {
+          "ridge": 0.0001,
+          "weights": [
+            1.0848466235328103,
+            0.8969564079908514,
+            1.086029797404306,
+            2.549807573413863,
+            3.710395311686734,
+            0.40019230478090373,
+            0.9381989721811863,
+            5.878651105516578
+          ],
+          "validation": {
+            "game_nll": 2.474818431413099,
+            "position_nll": 2.5148508224537633,
+            "game_top1": 0.22721158326670085,
+            "positions": 1556,
+            "games": 54
+          },
+          "optimization": {
+            "iterations": 20,
+            "objective": 2.4847667675293974,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        },
+        {
+          "ridge": 0.001,
+          "weights": [
+            0.9771225887134944,
+            0.7512221175704361,
+            0.8944849903135069,
+            2.307334871958519,
+            3.2953408480472763,
+            0.46357926066131816,
+            0.959106866201921,
+            3.6819594497346286
+          ],
+          "validation": {
+            "game_nll": 2.4791791982559053,
+            "position_nll": 2.5161053569342204,
+            "game_top1": 0.22063153970695315,
+            "positions": 1556,
+            "games": 54
+          },
+          "optimization": {
+            "iterations": 16,
+            "objective": 2.5035591339696666,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        },
+        {
+          "ridge": 0.01,
+          "weights": [
+            0.5650706286327596,
+            0.2857826096645491,
+            0.29277033047946144,
+            1.2197240114840184,
+            1.4882625177587963,
+            0.6483805883346115,
+            0.9747131049971682,
+            1.1339759820298854
+          ],
+          "validation": {
+            "game_nll": 2.531903535025181,
+            "position_nll": 2.5458245070133323,
+            "game_top1": 0.21124453658347642,
+            "positions": 1556,
+            "games": 54
+          },
+          "optimization": {
+            "iterations": 14,
+            "objective": 2.567906397213592,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        }
+      ],
+      "estimates": {
+        "raw": [
+          1.0848466235328103,
+          0.8969564079908514,
+          1.086029797404306,
+          2.549807573413863,
+          3.710395311686734
+        ],
+        "ratios": [
+          1.0,
+          0.82680481142109,
+          1.0010906370041903,
+          2.35038531540099,
+          3.420202663860267
+        ]
+      },
+      "test": {
+        "game_nll": 2.468221891980989,
+        "position_nll": 2.60079202998835,
+        "game_top1": 0.21222071758583474,
+        "positions": 1931,
+        "games": 56
+      },
+      "coverage": {
+        "train": {
+          "positions": 4960,
+          "games": 157,
+          "piece_count_mean": 7.544241495011971,
+          "context_mean": [
+            0.22860907058074206,
+            0.8840420950534355
+          ],
+          "stage_positions": {
+            "opening": 0,
+            "middlegame": 1158,
+            "endgame": 3802
+          },
+          "informative_positions": [
+            1625,
+            456,
+            398,
+            372,
+            237
+          ],
+          "expert_material_change_positions": 631,
+          "mean_legal_actions": 18.935602634712335
+        },
+        "validation": {
+          "positions": 1556,
+          "games": 54,
+          "piece_count_mean": 7.627634742453431,
+          "context_mean": [
+            0.24477536290681756,
+            0.8816572258182764
+          ],
+          "stage_positions": {
+            "opening": 0,
+            "middlegame": 370,
+            "endgame": 1186
+          },
+          "informative_positions": [
+            565,
+            180,
+            134,
+            114,
+            93
+          ],
+          "expert_material_change_positions": 223,
+          "mean_legal_actions": 20.008723942917428
+        },
+        "test": {
+          "positions": 1931,
+          "games": 56,
+          "piece_count_mean": 7.457238354573208,
+          "context_mean": [
+            0.23477021535538747,
+            0.88493157945263
+          ],
+          "stage_positions": {
+            "opening": 0,
+            "middlegame": 580,
+            "endgame": 1351
+          },
+          "informative_positions": [
+            683,
+            182,
+            218,
+            181,
+            141
+          ],
+          "expert_material_change_positions": 252,
+          "mean_legal_actions": 18.606015995826205
+        }
+      }
+    },
+    {
+      "group": "dense",
+      "cutoff": 20,
+      "ridge": 0.001,
+      "grid": [
+        {
+          "ridge": 0.0001,
+          "weights": [
+            0.8374189272957392,
+            1.5085379834415091,
+            2.423776106904857,
+            2.9920241635211067,
+            3.891100610579991,
+            0.791918711131787,
+            -0.26716770726933603,
+            2.3713427254418877
+          ],
+          "validation": {
+            "game_nll": 3.211670708061616,
+            "position_nll": 3.2539961675066116,
+            "game_top1": 0.1649568939916402,
+            "positions": 1268,
+            "games": 60
+          },
+          "optimization": {
+            "iterations": 25,
+            "objective": 3.226346366027801,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        },
+        {
+          "ridge": 0.001,
+          "weights": [
+            0.7772281948072379,
+            1.4166664173634724,
+            2.28677293390784,
+            2.7190720915397537,
+            3.3051638417972526,
+            0.8481125322040876,
+            -0.1935234818677802,
+            0.28459289183678393
+          ],
+          "validation": {
+            "game_nll": 3.2102814613412325,
+            "position_nll": 3.25147460962735,
+            "game_top1": 0.16249085757707438,
+            "positions": 1268,
+            "games": 60
+          },
+          "optimization": {
+            "iterations": 19,
+            "objective": 3.240184863082644,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        },
+        {
+          "ridge": 0.01,
+          "weights": [
+            0.527435708091183,
+            0.9568270014667083,
+            1.5133346748347385,
+            1.2383550105001833,
+            1.1823086856773648,
+            1.0602247355630212,
+            0.03642430797093699,
+            0.028279280790679172
+          ],
+          "validation": {
+            "game_nll": 3.2449218968517424,
+            "position_nll": 3.2809922940209346,
+            "game_top1": 0.152284586919651,
+            "positions": 1268,
+            "games": 60
+          },
+          "optimization": {
+            "iterations": 12,
+            "objective": 3.3022893105950093,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        }
+      ],
+      "estimates": {
+        "raw": [
+          0.7772281948072379,
+          1.4166664173634724,
+          2.28677293390784,
+          2.7190720915397537,
+          3.3051638417972526
+        ],
+        "ratios": [
+          1.0,
+          1.822716194328003,
+          2.942215618509552,
+          3.498421840208868,
+          4.252501213774127
+        ]
+      },
+      "test": {
+        "game_nll": 3.2491674490713294,
+        "position_nll": 3.2800179006505306,
+        "game_top1": 0.1416822814521161,
+        "positions": 1271,
+        "games": 60
+      },
+      "coverage": {
+        "train": {
+          "positions": 3772,
+          "games": 179,
+          "piece_count_mean": 25.50740516677032,
+          "context_mean": [
+            0.8848157890762127,
+            0.3138431474636648
+          ],
+          "stage_positions": {
+            "opening": 1071,
+            "middlegame": 2701,
+            "endgame": 0
+          },
+          "informative_positions": [
+            3149,
+            1094,
+            533,
+            225,
+            99
+          ],
+          "expert_material_change_positions": 956,
+          "mean_legal_actions": 34.781414263771644
+        },
+        "validation": {
+          "positions": 1268,
+          "games": 60,
+          "piece_count_mean": 25.506868990036114,
+          "context_mean": [
+            0.8944442107373287,
+            0.3235819230842418
+          ],
+          "stage_positions": {
+            "opening": 358,
+            "middlegame": 910,
+            "endgame": 0
+          },
+          "informative_positions": [
+            1067,
+            387,
+            194,
+            60,
+            49
+          ],
+          "expert_material_change_positions": 333,
+          "mean_legal_actions": 34.962622017905055
+        },
+        "test": {
+          "positions": 1271,
+          "games": 60,
+          "piece_count_mean": 25.511474828269073,
+          "context_mean": [
+            0.8876594601495429,
+            0.31050856830700435
+          ],
+          "stage_positions": {
+            "opening": 357,
+            "middlegame": 914,
+            "endgame": 0
+          },
+          "informative_positions": [
+            1065,
+            383,
+            147,
+            81,
+            40
+          ],
+          "expert_material_change_positions": 322,
+          "mean_legal_actions": 34.70058919973844
+        }
+      }
+    },
+    {
+      "group": "dense",
+      "cutoff": 24,
+      "ridge": 0.001,
+      "grid": [
+        {
+          "ridge": 0.0001,
+          "weights": [
+            0.8235855832413951,
+            1.4829376361811,
+            2.7502957948187388,
+            3.311094417435867,
+            3.7715148722146163,
+            0.9123069987204302,
+            -0.39188871533712016,
+            0.0
+          ],
+          "validation": {
+            "game_nll": 3.2184046158019517,
+            "position_nll": 3.281469383923341,
+            "game_top1": 0.15722938648834067,
+            "positions": 872,
+            "games": 60
+          },
+          "optimization": {
+            "iterations": 19,
+            "objective": 3.2140060004569255,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        },
+        {
+          "ridge": 0.001,
+          "weights": [
+            0.7691876643146519,
+            1.393014587363722,
+            2.5950472693467646,
+            2.8530839929975778,
+            3.046492258665308,
+            0.9624411657884665,
+            -0.30884082541836233,
+            0.0
+          ],
+          "validation": {
+            "game_nll": 3.217418913061181,
+            "position_nll": 3.2784639619629092,
+            "game_top1": 0.15581661625204102,
+            "positions": 872,
+            "games": 60
+          },
+          "optimization": {
+            "iterations": 17,
+            "objective": 3.228311511102294,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        },
+        {
+          "ridge": 0.01,
+          "weights": [
+            0.555798199743041,
+            0.9443867669063054,
+            1.700501443290762,
+            0.912559406555793,
+            0.9147047753605483,
+            1.1330707671376274,
+            -0.07171149552460057,
+            0.0
+          ],
+          "validation": {
+            "game_nll": 3.2509799468261766,
+            "position_nll": 3.301969917111322,
+            "game_top1": 0.14609945864956914,
+            "positions": 872,
+            "games": 60
+          },
+          "optimization": {
+            "iterations": 14,
+            "objective": 3.2872482785563113,
+            "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+          }
+        }
+      ],
+      "estimates": {
+        "raw": [
+          0.7691876643146519,
+          1.393014587363722,
+          2.5950472693467646,
+          2.8530839929975778,
+          3.046492258665308
+        ],
+        "ratios": [
+          1.0,
+          1.8110204466226087,
+          3.3737505029529538,
+          3.709217042033146,
+          3.9606618774622966
+        ]
+      },
+      "test": {
+        "game_nll": 3.2190969156382097,
+        "position_nll": 3.2768603441938655,
+        "game_top1": 0.1354747085017259,
+        "positions": 872,
+        "games": 60
+      },
+      "coverage": {
+        "train": {
+          "positions": 2596,
+          "games": 179,
+          "piece_count_mean": 27.26591484832529,
+          "context_mean": [
+            0.9466566403484712,
+            0.23473980149575863
+          ],
+          "stage_positions": {
+            "opening": 1071,
+            "middlegame": 1525,
+            "endgame": 0
+          },
+          "informative_positions": [
+            2154,
+            682,
+            268,
+            79,
+            48
+          ],
+          "expert_material_change_positions": 607,
+          "mean_legal_actions": 34.16425792892058
+        },
+        "validation": {
+          "positions": 872,
+          "games": 60,
+          "piece_count_mean": 27.24733086697631,
+          "context_mean": [
+            0.952350691772654,
+            0.24095559908500006
+          ],
+          "stage_positions": {
+            "opening": 358,
+            "middlegame": 514,
+            "endgame": 0
+          },
+          "informative_positions": [
+            731,
+            245,
+            113,
+            17,
+            25
+          ],
+          "expert_material_change_positions": 211,
+          "mean_legal_actions": 34.48207003684202
+        },
+        "test": {
+          "positions": 872,
+          "games": 60,
+          "piece_count_mean": 27.249539810902654,
+          "context_mean": [
+            0.9461034045527952,
+            0.22798574354073267
+          ],
+          "stage_positions": {
+            "opening": 357,
+            "middlegame": 515,
+            "endgame": 0
+          },
+          "informative_positions": [
+            725,
+            206,
+            77,
+            28,
+            15
+          ],
+          "expert_material_change_positions": 209,
+          "mean_legal_actions": 33.383306771343506
+        }
+      }
+    }
+  ],
+  "sparse_minus_dense": {
+    "estimate": [
+      0.0,
+      -1.4840303808564264,
+      -2.3289333310788303,
+      -1.411850474888401,
+      -0.9406588487156697
+    ],
+    "ci95": [
+      [
+        0.0,
+        -2.1508247309139157,
+        -3.297669529636706,
+        -2.648678897431946,
+        -2.480177205508427
+      ],
+      [
+        0.0,
+        -1.0048298041587482,
+        -1.5484387620870357,
+        -0.43853896029555395,
+        0.3683406716784527
+      ]
+    ]
+  },
+  "bootstrap_draws": 100,
+  "paired": true,
+  "non_king_piece_cutoffs": [
+    10,
+    22
+  ],
+  "seed": 2026092801,
+  "code_sha256": "df8c5bcd2e1fa4a829a4e19d781fa597dafe2af38ed9099d9f4b391447023687",
+  "protocol_sha256": "ba8bcac3ab6d5ae0773614331cdf4e7c7ed3cccb264e344a089c8deeec7347f2",
+  "original_models_sha256": "a84f6dcee006636cb21aa23e629bb87623c2ea7e488de7a96c6ee74e5dbff27e",
+  "elapsed_seconds": 53.71899999998277
+}

@@ -1,0 +1,7 @@
+{
+  "tables_and_intervals_verified": true,
+  "group_partition_verified": true,
+  "test_metrics_reproduced": true,
+  "hashes_verified": true,
+  "bootstrap_refits": 300
+}

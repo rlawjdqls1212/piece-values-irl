@@ -1,0 +1,164 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,booktabs,graphicx,microtype}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+\usepackage{placeins}
+\title{Context-Dependent Material Preferences in Chess:\\A One-Step Maximum-Entropy IRL Study}
+\author{Author information pending\\\small Working draft: not submitted}
+\date{September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We study context-dependent material preferences in standard chess using a horizon-one maximum-entropy inverse reinforcement learning model. The model estimates action reward coefficients from engine move choices, without using engine evaluation scores as labels. From 300 Stockfish 18 self-play games, we retain 18,351 non-forced, deduplicated positions across disjoint game-level training, validation, and test sets. We compare fixed handcrafted weights, learned global weights, and material weights modulated by game phase and file openness. The joint model achieves held-out game-mean negative log likelihood 2.8987, versus 2.9044 for the global model. The paired difference is -0.0057 nats, with a game-bootstrap 95\% interval [-0.0095, -0.0017]. The joint contextual model improves held-out likelihood over the global model under this protocol. The recovered coefficients describe model-conditional action preferences, not uniquely identified intrinsic piece values or full sequential chess rewards.
+\end{abstract}
+
+\section{Introduction}
+The familiar assignment of approximately one, three, three, five, and nine units to pawns, knights, bishops, rooks, and queens is a useful summary rather than a position-independent law. A piece's usefulness depends on the position and the continuation of play. This motivates studying whether a compact context-dependent evaluation model better explains expert move choices than a model with global coefficients.
+
+This paper presents a small, reproducible empirical study in standard chess. Its contributions are an explicit comparison of global and context-conditioned material preferences, an evaluation on held-out games after position deduplication, and a cluster-bootstrap analysis of the fitted coefficients. We do not propose a new IRL algorithm or claim that context-dependent piece values are a new concept. The narrow question is whether adding two interpretable context variables improves an otherwise identical horizon-one model, and how cautiously its coefficients must be interpreted.
+
+\section{Related work}
+Learning chess evaluation parameters from played moves has a long history. David et al.\ \cite{david} optimized evaluation functions to imitate grandmaster moves using genetic algorithms, followed by coevolution. Thus, learning from actions without numeric engine labels is not itself a novelty claim here. P\'alsson and Bj\"ornsson\ \cite{palsson} analyzed concepts in a strong chess engine and examined relative material values across game phases. PAWN\ \cite{pawn} predicts position-specific piece values using labels defined by changes in engine evaluation after removing a piece. Our target instead concerns coefficients inferred from selected legal actions; it is not the same estimand as removal-based contribution.
+
+Maximum-entropy IRL provides a probabilistic framework for explaining demonstrations with rewards\ \cite{ziebart}. Our horizon-one specialization is a conditional logit model over legal moves. It should not be confused with trajectory-level inference or a solution to adversarial sequential chess. Reward identification depends on modeling assumptions\ \cite{kim}; regularization and normalization select a numerical representation without proving it to be a unique underlying reward.
+
+\section{Model}
+\subsection{Immediate action features}
+For a pre-move state $s$, let $A(s)$ be all legal moves, and let $s_a$ be the state after move $a$. Fix the perspective to the player moving in $s$. The feature vector $\phi(s)$ consists of own-minus-opponent counts of pawns, knights, bishops, rooks, and queens, a signed centrality sum, an indicator of check delivered to the opponent, and an indicator of delivered mate. Centrality of a piece on zero-indexed file $f$ and rank $r$ is
+\[
+c(f,r)=\frac{7-|f-3.5|-|r-3.5|}{7}.
+\]
+Centrality is summed positively for own pieces and negatively for opposing pieces. Define $x(s,a)=\phi(s_a)-\phi(s)\in\mathbb R^8$. No engine evaluation score enters these features or supplies a training label.
+
+\subsection{Context-conditioned coefficients}
+Game phase is
+\[
+p(s)=\min\{1,(n_N+n_B+2n_R+4n_Q)/24\},
+\]
+where counts include both players. It is one at the standard initial position and zero when no non-pawn material except kings remains. Openness $o(s)$ is the fraction of files that lack at least one color's pawn; it counts semi-open and fully open files together. This is a precisely defined pawn-structure proxy, not a complete measure of positional openness. Both contexts are computed before the candidate move.
+
+Let $x_M$ contain the five material features and $x_U$ the remaining three. The joint reward model is
+\begin{align}
+r_\theta(s,a)&=w_M(s)^\top x_M(s,a)+u^\top x_U(s,a),\\
+w_M(s)&=b+(p(s)-0.5)d+(o(s)-0.5)e.
+\end{align}
+The global model sets $d=e=0$, while the phase-only and openness-only variants set one of them to zero. These have 8, 13, 13, and 18 parameters, respectively. The joint model is additive in its contexts; it contains no phase--openness interaction. A single shared set of nuisance coefficients $u$ is used in every learned model.
+
+\subsection{Estimation}
+At temperature one, the policy is
+\[
+\pi_\theta(a\mid s)=\frac{\exp r_\theta(s,a)}{\sum_{a'\in A(s)}\exp r_\theta(s,a')}.
+\]
+We minimize a game-balanced negative log likelihood with ridge regularization:
+\[
+\mathcal L(\theta)=-\frac1G\sum_{g=1}^G\frac1{n_g}
+\sum_{i\in g}\log\pi_\theta(a_i\mid s_i)+\frac\lambda2\|\theta\|_2^2.
+\]
+For the fixed design matrix this is a convex problem; positive ridge makes the objective strictly convex. We use L-BFGS-B with an analytic gradient. Choose $\lambda\in\{10^{-4},10^{-3},10^{-2}\}$ by validation game-mean NLL without refitting on the test data. The handcrafted baseline uses $(1,3,3.2,5,9,0.6,0.5,15)$ with a positive inverse temperature fitted on training data. A uniform legal-move policy is included.
+
+\subsection{What the coefficients can identify}
+For most non-capturing, non-promoting moves, material-count differences are zero. Material coefficients are therefore informed primarily by the alternatives involving captures and promotions. In our training data, 7,201 of 10,795 positions have variation in at least one material feature across legal moves. There are 91 delivered-mate candidate actions. The material features cannot directly encode the long-term value of saving or repositioning a piece. A low coefficient may reflect a missing tactical continuation rather than low strategic importance. Within-state additive reward terms are unidentifiable from softmax probabilities. Temperature is fixed for learned models, but this convention does not resolve other sources of reward ambiguity or feature misspecification. Pawn normalization is a presentation convention, not evidence for a unique universal price.
+
+\section{Experimental protocol}
+\subsection{Data generation and partitioning}
+We generated 300 standard-chess self-play games with Stockfish 18\ \cite{stockfish}, one thread, a 64 MB hash, and 5000 search nodes per move. Each game starts with eight uniformly sampled legal exploratory plies. These moves diversify trajectories and are excluded from estimation. The engine subsequently chooses both sides' moves. We sample every other expert position, alternating the sampled color by game ID, and stop at a rule-based terminal state or 240 plies. Truncated games are not relabeled as draws. Engine hash is cleared between games and game boundaries are signaled through UCI. Table~\ref{tab:data} reports retained data.
+
+Game seeds start at 10000. A deterministic permutation with seed 20260927 assigns games 60/20/20 to training, validation, and testing. Positions with only one legal action are excluded because they provide no choice information. We then remove repeated states within and across partitions, giving training precedence over validation and test. The key contains piece placement, side to move, castling rights, and legal en-passant state. Full move histories are saved separately. This prevents exact-board leakage, but does not guarantee independent strategic motifs or remove history-dependent differences from repetition rules. The number of games contributing no retained positions after filtering is 1; the retained game counts can therefore sum to less than the number generated.
+
+\begin{table}[ht]
+\centering
+\caption{Data after excluding forced moves and deduplicating positions. Duplicate counts include within-partition and cross-partition removals.}\label{tab:data}
+\begin{tabular}{lrrrr}\toprule
+Split & Games & Positions & Legal candidates & Duplicates\\\midrule
+Train & 179 & 10,795 & 283,663 & 144\\
+Validation & 60 & 3,624 & 96,930 & 49\\
+Test & 60 & 3,932 & 104,488 & 39\\
+\bottomrule\end{tabular}
+\end{table}
+
+A separate 12-game, 1,000-node pilot checked runtime and the software pipeline and is not included in these results. The local protocol was written before collecting the new main dataset; this is not a publicly registered preregistration. Of the main games, 9 reached the length limit. The remaining termination counts are supplied in the reproducibility package. Random openings and limited search budgets define a particular engine-generated state distribution; these are not human grandmaster games or an assertion of optimal play.
+
+\subsection{Metrics and uncertainty}
+The primary metric is test game-mean NLL in nats. Secondary metrics are position-mean NLL and game-mean top-1 accuracy, with fractional credit $1/k$ if the demonstrated move is among $k$ tied best-scoring moves. Our primary comparison is joint minus global test game-mean NLL. A paired bootstrap resamples test games 2,000 times. Other model comparisons are descriptive rather than separate confirmatory tests.
+
+For coefficient uncertainty, we perform 100 training-game cluster-bootstrap refits with the selected ridge fixed. Thus intervals are conditional on the model and selected hyperparameter and do not include hyperparameter-selection uncertainty. Context reference cells are defined by training-context terciles. We report cells containing at least 20 distinct training games and evaluate coefficients at their empirical mean context. Discrete context values may produce empty cells. Pawn ratios are suppressed if the pawn coefficient's bootstrap lower 95\% bound is nonpositive or near zero. All context intervals are pointwise and exploratory.
+
+\section{Results}
+\subsection{Predictive comparison}
+Table~\ref{tab:pred} and Figure~\ref{fig:pred} report all tested models. The primary difference is -0.0057 nats, with paired 95\% interval [-0.0095, -0.0017]. The joint contextual model improves held-out likelihood over the global model under this protocol. These measurements concern behavioral prediction, not match strength.
+
+\begin{table}[ht]\centering
+\caption{Held-out prediction. Lower NLL is better; top-1 is game-balanced and tie-adjusted.}\label{tab:pred}
+\begin{tabular}{lrrr}\toprule
+Model & Game NLL & Position NLL & Top-1 (\%)\\\midrule
+Uniform & 3.1008 & 3.0954 & 6.70\\
+Handcrafted & 2.9337 & 2.9345 & 16.79\\
+Global & 2.9044 & 2.8992 & 16.70\\
+Phase & 2.9010 & 2.8950 & 16.90\\
+Openness & 2.8993 & 2.8932 & 16.90\\
+Joint & 2.8987 & 2.8928 & 16.96\\
+\bottomrule\end{tabular}\end{table}
+\begin{figure}[ht]\centering
+\includegraphics[width=.88\linewidth]{prediction.pdf}
+\caption{Predictive loss on held-out games. The paired primary comparison is quantified in the text; bars are point estimates.}\label{fig:pred}
+\end{figure}
+
+\subsection{Context-dependent material coefficients}
+The training-position correlation between phase and file openness is -0.802, so effects should not be interpreted as independent causal manipulations. Figure~\ref{fig:coef} shows the five raw reward coefficients at empirically supported contexts, with pointwise cluster-bootstrap intervals. Of 7 displayed cells, 7 pass the pawn-denominator stability rule. Table~\ref{tab:ratios} reports ratios only for those cells. Raw coefficients and ratio intervals for all eligible cells are also retained in machine-readable form. Differences across cells describe the fitted additive model on this distribution; they do not establish a causal effect of opening a file or exchanging a piece.
+
+\begin{figure}[ht]\centering
+\includegraphics[width=\linewidth]{coefficients.pdf}
+\caption{Context-conditioned raw material coefficients with 95\% training-game bootstrap intervals. Cell labels denote low-to-high phase and openness terciles. The contexts are empirical means, not hand-selected positions.}\label{fig:coef}
+\end{figure}
+\begin{table}[ht]\centering\small
+\caption{Pawn-normalized coefficients at empirical reference contexts. P/N/B/R/Q denote piece types; ``--'' indicates unstable normalization. These are action-reward ratios, not centipawn labels.}\label{tab:ratios}
+\begin{tabular}{lrrrrrrrr}\toprule
+Cell & $p$ & $o$ & Games & P & N & B & R & Q\\\midrule
+1/2 & 0.13 & 0.68 & 61 & 1.00 & 1.11 & 1.57 & 2.80 & 3.60\\
+1/3 & 0.14 & 0.97 & 112 & 1.00 & 0.77 & 0.96 & 2.19 & 3.40\\
+2/1 & 0.52 & 0.31 & 56 & 1.00 & 1.88 & 2.95 & 3.72 & 4.08\\
+2/2 & 0.44 & 0.65 & 152 & 1.00 & 1.25 & 1.82 & 2.76 & 3.70\\
+2/3 & 0.35 & 0.93 & 125 & 1.00 & 0.86 & 1.12 & 2.18 & 3.47\\
+3/1 & 0.94 & 0.20 & 179 & 1.00 & 2.40 & 3.89 & 4.05 & 4.43\\
+3/2 & 0.86 & 0.60 & 121 & 1.00 & 1.49 & 2.26 & 2.74 & 3.88\\
+\bottomrule\end{tabular}\end{table}
+
+\FloatBarrier
+\section{Discussion and limitations}
+Context-conditioned action coefficients are useful only to the extent that the policy model explains the behavior of interest. Our model deliberately omits opponent replies, future exchanges, mobility, king safety, and positional interactions beyond the two context variables. The same material coefficient must summarize tactical and strategic situations that the model cannot distinguish. Consequently, context coefficients can absorb omitted-variable effects and the engine's own heuristics. They should not be used as a recovered ground-truth evaluation table.
+
+The study uses one engine version, one node budget, one main collection seed range, and one data split. Bootstrap resampling quantifies uncertainty within this dataset but does not replace independent collections or demonstrate robustness across engines and search budgets. The 300-game scale and 100 coefficient refits are modest. Exact-board deduplication does not eliminate transpositional families or all dependence between games. Some positions are excluded because they are forced or already observed. Pawn normalization can further amplify uncertainty.
+
+There is a distinction between recovering reward and describing value. With a known win/loss objective, piece usefulness may belong in a continuation value function rather than an immediate reward. Our horizon-one construction is a transparent, restricted inverse reward model and conditional-choice baseline. It is not a model of optimal sequential chess, and no claim is made about win-rate improvements, human cognitive preferences, or a unique intrinsic value of any piece. Future work can add reply-aware models and compare action-derived preferences with result-based and engine-removal-based estimates, while retaining the present model as a baseline.
+
+\section{Conclusion}
+We implemented and evaluated a context-conditioned, horizon-one maximum-entropy inverse reward model for standard chess. The joint contextual model improves held-out likelihood over the global model under this protocol. The experiment provides a reproducible comparison of fixed and context-dependent action preferences, together with uncertainty estimates and explicit limits on material-value interpretation. Stronger claims about strategic piece value require a model of continuations and broader empirical validation.
+
+\section*{Data, code, and tool use}
+The accompanying reproducibility archive contains the collection and fitting code, a written protocol, complete self-play PGN, partition manifests, hyperparameter results, bootstrap coefficients, and software/engine hashes. No public repository URL has been assigned at draft time. Stockfish is obtained from its official release; its executable is not redistributed in the archive. OpenAI Codex assisted with research design, code implementation, analysis, and manuscript drafting. Numerical results are computed by the accompanying programs rather than supplied by the language model. Author identity and final author review must be completed before submission.
+
+\appendix
+\section{Optimization and implementation checks}
+\begin{table}[ht]\centering
+\caption{Hyperparameters selected on validation games.}\label{tab:hyper}
+\begin{tabular}{lrrr}\toprule
+Model & Parameters & Ridge $\lambda$ & Validation NLL\\\midrule
+Global & 8 & 0.0001 & 2.9236\\
+Phase & 13 & 0.0001 & 2.9197\\
+Openness & 13 & 0.0001 & 2.9180\\
+Joint & 18 & 0.0001 & 2.9177\\
+\bottomrule\end{tabular}\end{table}
+The maximum absolute analytic-versus-central-finite-difference gradient error was 3.75e-11. On a synthetic 18-parameter conditional-choice recovery check, coefficient RMSE was 0.0386. This verifies a known-parameter numerical example, not identifiability in chess. Tests additionally check player perspective for captures, promotion count changes, legal candidate enumeration, no board mutation, and game weighting. Each collected game is replayed to verify the saved position and demonstrated move. All candidates are generated by python-chess. Test positions are never used for ridge selection or fitting.
+
+The run used Python 3.12.10, NumPy 2.5.3, SciPy 1.18.1, and python-chess's chess module 1.11.2. The full binary and dataset SHA-256 hashes are stored in the accompanying JSON manifests. The analytic objective uses stable log-sum-exp normalization over each state's legal actions. Completed game files are atomically written and collection resumes without regenerating them when the configuration is unchanged.
+
+\begin{thebibliography}{9}\small
+\bibitem{david} E. David, H. J. van den Herik, M. Koppel, and N. S. Netanyahu. Simulating Human Grandmasters: Evolution and Coevolution of Evaluation Functions. In \emph{GECCO}, pp. 1483--1489, 2009. \href{https://arxiv.org/abs/1711.06840}{arXiv:1711.06840}.
+\bibitem{palsson} A. P\'alsson and Y. Bj\"ornsson. Unveiling Concepts Learned by a World-Class Chess-Playing Agent. In \emph{IJCAI}, 2023. \href{https://www.ijcai.org/proceedings/2023/541}{Proceedings}.
+\bibitem{pawn} E. Tang, H. Davulcu, J. Zou, and Z. Zhang. PAWN: Piece Value Analysis with Neural Networks. \href{https://arxiv.org/abs/2604.15585}{arXiv:2604.15585}, 2026.
+\bibitem{ziebart} B. D. Ziebart, A. Maas, J. A. Bagnell, and A. K. Dey. Maximum Entropy Inverse Reinforcement Learning. In \emph{AAAI}, pp. 1433--1438, 2008. \href{https://www.cs.cmu.edu/~bziebart/publications/maximum-entropy-inverse-reinforcement-learning.html}{Paper}.
+\bibitem{kim} K. Kim, S. Garg, K. Shiragur, and S. Ermon. Reward Identification in Inverse Reinforcement Learning. In \emph{ICML}, PMLR 139:5496--5505, 2021. \href{https://proceedings.mlr.press/v139/kim21c.html}{Paper}.
+\bibitem{stockfish} Stockfish developers. Stockfish 18, 2026. \href{https://github.com/official-stockfish/Stockfish/releases/tag/sf_18}{Official release}.
+\end{thebibliography}
+\end{document}

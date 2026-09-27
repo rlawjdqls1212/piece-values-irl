@@ -1,0 +1,14 @@
+\section{Likelihood Geometry and Reproducible Inference}
+Let $z_{ia}$ denote the full design vector for candidate $a$ in state $i$, including context interactions where applicable, and let $\alpha_i$ be its equal-game observation weight. With $\mu_i=\sum_a\pi_\theta(a\mid s_i)z_{ia}$, the objective gradient is
+\begin{equation}
+\nabla\mathcal L(\theta)=\sum_i\alpha_i(\mu_i-z_{ia_i})+\lambda\theta.
+\end{equation}
+The Hessian is a sum of within-state feature covariances plus the ridge contribution:
+\begin{equation}
+\nabla^2\mathcal L(\theta)=\sum_i\alpha_i\operatorname{Cov}_{\pi_\theta}(z_{ia})+\lambda I.
+\end{equation}
+This gives a direct interpretation of the support diagnostics. If a feature has the same value for every candidate in a state, its centered value is zero and that state contributes no direct covariance information in that direction. Positive ridge gives a unique penalized optimum for a fixed design, but the resulting numerical value can still be primarily penalty-driven when the likelihood is weakly informative. A large number of states is not a substitute for variation among their legal alternatives.
+
+The pre-move feature subtraction cancels from the softmax normalizer because context is fixed before the action. Consequently, scoring post-move features or their differences gives the same choice probabilities under the same coefficients. This equivalence would not justify changing the perspective after the move: own-minus-opponent features must remain defined from the original mover's perspective. Captures and promotions are checked explicitly in the supplied numerical tests.
+
+The public archive preserves both the game histories and the retained feature caches. The histories support replay and checking of state/action alignment; caches permit refitting without re-querying the engine. Saved bootstrap arrays reproduce reported intervals without new random draws. Protocol files identify which analyses preceded the original run and which were added afterward. The remaining-piece extension and strength-setting extension each have a dedicated verification program that recomputes saved metrics and intervals and checks the hashes of their inputs.

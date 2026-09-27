@@ -1,0 +1,14 @@
+{
+  "gradient_max_error": 3.7545383468895466e-11,
+  "synthetic_coefficient_rmse": 0.038620503108845655,
+  "tests": [
+    "initial legal candidates",
+    "no mutation",
+    "white capture",
+    "black capture",
+    "promotion",
+    "gradient finite difference",
+    "synthetic recovery",
+    "game weighting"
+  ]
+}

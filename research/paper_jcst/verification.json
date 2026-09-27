@@ -1,0 +1,16 @@
+{
+  "pages": 15,
+  "all_11_original_tables_unchanged": true,
+  "total_tables": 26,
+  "all_tables_referenced": true,
+  "official_class_unchanged": true,
+  "abstract_word_counts": [
+    133,
+    169
+  ],
+  "figure_dpi": 300,
+  "overfull_boxes": 0,
+  "undefined_references": 0,
+  "source_zip_integrity": true,
+  "pdf_sha256": "33aae2e27fd7c98414b1f648598608fec0a5d6c580531e06055df64cf65a6852"
+}

@@ -1,0 +1,12 @@
+{
+  "no_duplicate_board_or_game_across_splits": true,
+  "saved_model_metrics_reproduced": true,
+  "bootstrap_shape": true,
+  "code_and_protocol_hashes": true,
+  "pdf_pages": 11,
+  "pdf_sha256": "f9651c54e17b009a3adc8eae1a1028b43e07ab7db14a4389c17303db6e062c71",
+  "layout_warnings": [],
+  "zip_integrity": true,
+  "rendered_pages": 11,
+  "render_directory": "C:\\Users\\rlawj\\Downloads\\Inverse_RL_Examples\\irl_examples\\output\\pdf\\rendered\\f9651c54e17b"
+}
